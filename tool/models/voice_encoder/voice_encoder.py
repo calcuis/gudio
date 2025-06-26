@@ -1,17 +1,14 @@
 # Adapted from https://github.com/CorentinJ/Real-Time-Voice-Cloning
 # MIT License
 from typing import List, Union, Optional
-
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
 import librosa
 import torch
 import torch.nn.functional as F
 from torch import nn, Tensor
-
 from .config import VoiceEncConfig
 from .melspec import melspectrogram
-
 
 def pack(arrays, seq_len: int=None, pad_value=0):
     """
@@ -50,7 +47,6 @@ def pack(arrays, seq_len: int=None, pad_value=0):
 
     return packed_tensor
 
-
 def get_num_wins(
     n_frames: int,
     step: int,
@@ -65,7 +61,6 @@ def get_num_wins(
     target_n = win_size + step * (n_wins - 1)
     return n_wins, target_n
 
-
 def get_frame_step(
     overlap: float,
     rate: float,
@@ -79,7 +74,6 @@ def get_frame_step(
         frame_step = int(np.round((hp.sample_rate / rate) / hp.ve_partial_frames))
     assert 0 < frame_step <= hp.ve_partial_frames
     return frame_step
-
 
 def stride_as_partials(
     mel: np.ndarray,
@@ -114,7 +108,6 @@ def stride_as_partials(
     strides = (mel.strides[0] * frame_step, mel.strides[0], mel.strides[1])
     partials = as_strided(mel, shape, strides)
     return partials
-
 
 class VoiceEncoder(nn.Module):
     def __init__(self, hp=VoiceEncConfig()):

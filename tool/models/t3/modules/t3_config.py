@@ -1,6 +1,5 @@
 from ..llama_configs import LLAMA_CONFIGS
 
-
 class T3Config:
     start_text_token = 255
     stop_text_token = 0

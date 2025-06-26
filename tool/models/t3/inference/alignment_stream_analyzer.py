@@ -1,14 +1,9 @@
-# Copyright (c) 2025 Resemble AI
-# Author: John Meade, Jeremy Hsu
-# MIT License
-import logging
 import torch
+import logging
 from dataclasses import dataclass
 from types import MethodType
 
-
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class AlignmentAnalysisResult:
@@ -24,7 +19,6 @@ class AlignmentAnalysisResult:
     complete: bool
     # approximate position in the text token sequence. Can be used for generating online timestamps.
     position: int
-
 
 class AlignmentStreamAnalyzer:
     def __init__(self, tfmr, queue, text_tokens_slice, alignment_layer_idx=9, eos_idx=0):

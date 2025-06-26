@@ -1,9 +1,7 @@
 from functools import lru_cache
-
 from scipy import signal
 import numpy as np
 import librosa
-
 
 @lru_cache()
 def mel_basis(hp):
@@ -15,13 +13,11 @@ def mel_basis(hp):
         fmin=hp.fmin,
         fmax=hp.fmax)  # -> (nmel, nfreq)
 
-
 def preemphasis(wav, hp):
     assert hp.preemphasis != 0
     wav = signal.lfilter([1, -hp.preemphasis], [1], wav)
     wav = np.clip(wav, -1, 1)
     return wav
-
 
 def melspectrogram(wav, hp, pad=True):
     # Run through pre-emphasis
@@ -50,7 +46,6 @@ def melspectrogram(wav, hp, pad=True):
     assert not pad or mel.shape[1] == 1 + len(wav) // hp.hop_size   # Sanity check
     return mel   # (M, T)
 
-
 def _stft(y, hp, pad=True):
     # NOTE: after 0.8, pad mode defaults to constant, setting this to reflect for
     #   historical consistency and streaming-version consistency
@@ -63,14 +58,11 @@ def _stft(y, hp, pad=True):
         pad_mode="reflect",
     )
 
-
 def _amp_to_db(x, hp):
     return 20 * np.log10(np.maximum(hp.stft_magnitude_min, x))
 
-
 def _db_to_amp(x):
     return np.power(10.0, x * 0.05)
-
 
 def _normalize(s, hp, headroom_db=15):
     min_level_db = 20 * np.log10(hp.stft_magnitude_min)

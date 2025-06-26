@@ -1,13 +1,8 @@
-# Copyright (c) 2025 Resemble AI
-# Author: Manmay Nakhashi
-# MIT License
-import math
-
 import torch
+import math
 from torch import nn
 import torch.nn.functional as F
 from einops import rearrange
-
 
 class RelativePositionBias(nn.Module):
     def __init__(self, scale, causal=False, num_buckets=32, max_distance=128, heads=8):
@@ -50,7 +45,6 @@ class RelativePositionBias(nn.Module):
         values = self.relative_attention_bias(rp_bucket)
         bias = rearrange(values, 'i j h -> () h i j')
         return qk_dots + (bias * self.scale)
-
 
 class AttentionQKV(nn.Module):
     def __init__(self, n_heads, head_dim, dropout_rate=0.1, scale=None, flash=False):
@@ -108,7 +102,6 @@ class AttentionQKV(nn.Module):
         bs, _, length, _ = x.shape
         x = x.permute(0, 2, 1, 3).contiguous()
         return x.view(bs, length, -1)
-
 
 class AttentionBlock2(nn.Module):
     """
@@ -168,7 +161,6 @@ class AttentionBlock2(nn.Module):
         h = self.proj_out(h)
 
         return (x1 + h).reshape(b1, c1, *spatial1)
-
 
 class Perceiver(nn.Module):
     """Inspired by https://arxiv.org/abs/2103.03206"""

@@ -3,7 +3,6 @@ from typing import Union
 import torch
 from torch import nn, Tensor
 
-
 class LearnedPositionEmbeddings(nn.Module):
     def __init__(self, seq_len, model_dim, init=.02):
         super().__init__()

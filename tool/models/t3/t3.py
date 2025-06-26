@@ -1,38 +1,29 @@
-# Copyright (c) 2025 Resemble AI
-# MIT License
-import logging
-from typing import Union, Optional, List
-
-from tqdm import tqdm
 import torch
 import torch.nn.functional as F
 from torch import nn, Tensor
 from transformers import LlamaModel, LlamaConfig
 from transformers.generation.logits_process import TopPLogitsWarper, RepetitionPenaltyLogitsProcessor
-
+import logging
+from typing import Union, Optional, List
+from tqdm import tqdm
 from .modules.learned_pos_emb import LearnedPositionEmbeddings
-
 from .modules.cond_enc import T3CondEnc, T3Cond
 from .modules.t3_config import T3Config
 from .llama_configs import LLAMA_CONFIGS
 from .inference.t3_hf_backend import T3HuggingfaceBackend
 from .inference.alignment_stream_analyzer import AlignmentStreamAnalyzer
 
-
 logger = logging.getLogger(__name__)
-
 
 class AttrDict(dict):
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
 
-
 def _ensure_BOT_EOT(text_tokens: Tensor, hp):
     B = text_tokens.size(0)
     assert (text_tokens == hp.start_text_token).int().sum() >= B, "missing start_text_token"
     assert (text_tokens == hp.stop_text_token).int().sum() >= B, "missing stop_text_token"
-
 
 class T3(nn.Module):
     """

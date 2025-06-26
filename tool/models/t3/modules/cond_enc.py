@@ -7,7 +7,6 @@ from torch import nn, Tensor
 from .perceiver import Perceiver
 from .t3_config import T3Config
 
-
 @dataclass
 class T3Cond:
     """
@@ -36,7 +35,6 @@ class T3Cond:
     def load(fpath, map_location="cpu"):
         kwargs = torch.load(fpath, map_location=map_location, weights_only=True)
         return T3Cond(**kwargs)
-
 
 class T3CondEnc(nn.Module):
     """
